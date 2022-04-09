@@ -13,7 +13,7 @@ Additionaly, instead of simply using the temperature value, it calculates the av
   * Linux compatible motherboard (hwmon interface should expose PWM controls)
 
 ## Configuration
-Investigate config.json and tweak it to your needs. The fan steps are stored in format [X, Y] where X is the temperature and Y is target fan speed %.
+Copy sample-configs/pyfan.yml to /etc/pyfan/pyfan.yml or /usr/local/etc/pyfan/pyfan.yml and tweak it to your needs. The fan steps are stored in format [X, Y] where X is the temperature and Y is target fan speed %.
 
 ## Usage
 Run `./pyfan.py` as root and make it running as a deamon however you want.

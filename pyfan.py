@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
-import hwmon, nvidia, datacollector
+import config, hwmon, nvidia, datacollector
 import sys, time, json
 
-with open('config.json', 'r') as config_file:
-    fans = json.loads(config_file.read())
-    config_file.close()
+fans = config.Config().data['fans']
 
 collector = datacollector.DataCollector(nvidia.temp)
 collector.start()
