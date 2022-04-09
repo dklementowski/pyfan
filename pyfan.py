@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import hwmon, nvidia, datacollector, time, json
+import hwmon, nvidia, datacollector
+import sys, time, json
 
 with open('config.json', 'r') as config_file:
     fans = json.loads(config_file.read())
@@ -25,19 +26,22 @@ def loop():
 
     while True:
         for fan in fans:
-            device = None
-            for key, val in devices.items():
-                if key == fan['device_name']:
-                    device = val
+            target_device = None
+            for device in devices:
+                if device.device_path == fan['device_path']:
+                    target_device = device
 
-            pwm = hwmon.Pwm(device, fan['pwm_id'])
+            if target_device == None:
+                sys.stderr.write('hwmon interaface for {0} not found!\nSkipping'.format(fan['device_path']))
+                continue
+
+            pwm = hwmon.Pwm(target_device, fan['pwm_id'])
             target_speed = get_target_speed(fan['fan_steps'], collector.average) / 100
 
-            #print('setting {0}% to {1} on {2}'.format(int(target_speed * 100), pwm.pwm_id, device.name))
             pwm.set_control(True)
             pwm.set_speed(target_speed)
+
         time.sleep(1)
-        #print()
 
 if __name__ == '__main__':
     loop()

@@ -3,12 +3,11 @@ import os.path, os, re, math
 HWMON_BASE_PATH = '/sys/class/hwmon'
 
 def get_devices():
-    devices = {}
+    devices = []
 
     for root, dirs, files in os.walk(HWMON_BASE_PATH):
         for dir in dirs:
-            device = HwmonDevice(dir)
-            devices[device.name] = device
+            devices.append(HwmonDevice(dir))
 
     return devices
 
@@ -23,11 +22,12 @@ class HwmonDevice:
         self.hwmon_path = hwmon_path
 
     @property
-    def name(self):
-        with open(os.path.join(self.hwmon_path, 'name'), 'r') as file:
-            name = file.readline().strip()
-            file.close()
-            return name
+    def id(self):
+        return self.hwmon_id
+
+    @property
+    def device_path(self):
+        return os.path.realpath(os.path.join(self.hwmon_path, 'device'))
 
     @property
     def controlable(self):
@@ -66,10 +66,10 @@ class HwmonDevice:
 class Pwm:
     def __init__(self, hwmon_device: HwmonDevice, pwm_id: int):
         if not hwmon_device.controlable:
-            raise Exception('{0} is not controlable'.format(hwmon_device.name))
+            raise Exception('{0} is not controlable'.format(hwmon_device.id))
 
         if 'pwm{0}'.format(pwm_id) not in hwmon_device.pwms:
-            raise Exception('No PWM {0} in {1}'.format(pwm_id, hwmon_device.name))
+            raise Exception('No PWM {0} in {1}'.format(pwm_id, hwmon_device.id))
 
         self.hwmon_device = hwmon_device
         self.pwm_id = pwm_id
