@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import config, hwmon, nvidia, datacollector
+import config, hwmon, amd, datacollector
 import sys, time, json
 
 fans = config.Config().data['fans']
 
-collector = datacollector.DataCollector(nvidia.temp)
+collector = datacollector.DataCollector(amd.temp)
 collector.start()
 
 def get_target_speed(fan_steps, compare_value):

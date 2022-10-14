@@ -20,6 +20,7 @@ class HwmonDevice:
 
         self.hwmon_id = hwmon_id
         self.hwmon_path = hwmon_path
+        self._name= None
 
     @property
     def id(self):
@@ -28,6 +29,11 @@ class HwmonDevice:
     @property
     def device_path(self):
         return os.path.realpath(os.path.join(self.hwmon_path, 'device'))
+
+    @property
+    def name(self):
+        with open(os.path.join(self.hwmon_path, 'name'), 'r') as _f:
+            return _f.read().strip()
 
     @property
     def controlable(self):
