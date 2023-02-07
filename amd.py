@@ -5,15 +5,9 @@ devices = hwmon.get_devices()
 amdgpu = None
 
 for dev in devices:
-<<<<<<< HEAD
-    if dev.name == 'amdgpu':
-        amdgpu = dev
-=======
-    print(dev.name)
     if dev.name == 'amdgpu':
         amdgpu = dev
         break
->>>>>>> 4e6366c (Switch to AMD)
 
 if amdgpu == None:
     raise Exception('No AMD GPU found')
